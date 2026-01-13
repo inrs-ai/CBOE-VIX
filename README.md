@@ -1,2 +1,2 @@
 # CBOE-VIX
-CBOE VIX
+CBOE-VIX Daily Fetch

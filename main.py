@@ -32,26 +32,37 @@ def send_email(price, current_time):
         print("Error: Missing SMTP environment variables.")
         return
 
-    subject = f"今日 VIX 指数更新: {price}"
-    content = f"北京时间: {current_time}\n当前 CBOE VIX 数值为: {price}"
+    # 构造更规范的邮件内容
+    subject = f"Market Alert: VIX Index Update - {current_time}" # 改变主题，避免纯中文或过于像广告
+    body = f"""
+    Hello,
     
-    message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = Header(f"VIX Bot <{email_from}>", 'utf-8')
-    message['To'] = Header(email_to, 'utf-8')
+    This is an automated market data update.
+    
+    Item: CBOE Volatility Index (VIX)
+    Current Value: {price}
+    Timestamp: {current_time} (Beijing Time)
+    
+    ---
+    Sent from GitHub Actions Automated Bot.
+    """
+    
+    message = MIMEText(body, 'plain', 'utf-8')
+    # 关键：确保 From 这里的格式非常标准
+    message['From'] = email_from
+    message['To'] = email_to
     message['Subject'] = Header(subject, 'utf-8')
     
     try:
-        # 核心逻辑：根据端口选择连接方式
+        # 使用 465 端口
         if smtp_port == 465:
-            # 465 端口必须使用 SMTP_SSL
             server = smtplib.SMTP_SSL(smtp_host, smtp_port)
         else:
-            # 587 或 25 端口使用普通 SMTP + starttls
             server = smtplib.SMTP(smtp_host, smtp_port)
             server.starttls()
             
         server.login(smtp_user, smtp_pass)
-        server.sendmail(email_from, email_to, message.as_string())
+        server.sendmail(email_from, [email_to], message.as_string())
         server.quit()
         print("Email sent successfully.")
     except Exception as e:

@@ -1,2 +1,2 @@
 # CBOE-VIX
-CBOE-VIX Daily Fetch
+Get daily CBOE-VIX data via email

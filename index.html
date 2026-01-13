@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBOE VIX 每日追踪</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; color: #333; }
+        h1 { border-bottom: 2px solid #eaeaea; padding-bottom: 0.5rem; }
+        .latest-card { background: #f0f8ff; padding: 1.5rem; border-radius: 8px; text-align: center; margin-bottom: 2rem; border: 1px solid #d0e3f0; }
+        .latest-val { font-size: 3rem; font-weight: bold; color: #0056b3; }
+        .latest-time { color: #666; font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+    <h1>CBOE VIX 每日监控</h1>
+
+    <div id="latest-container" class="latest-card">
+        <div>最新数值</div>
+        <div class="latest-val" id="latest-val">加载中...</div>
+        <div class="latest-time" id="latest-time">--</div>
+    </div>
+
+    <h3>历史记录 (最近10条)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>日期 (北京时间)</th>
+                <th>数值</th>
+            </tr>
+        </thead>
+        <tbody id="history-list">
+        </tbody>
+    </table>
+
+    <script>
+        // 获取 data.json 文件内容
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    // 1. 显示最新数据
+                    const latest = data[0];
+                    document.getElementById('latest-val').textContent = latest.value;
+                    document.getElementById('latest-time').textContent = latest.date;
+
+                    // 2. 显示列表
+                    const tbody = document.getElementById('history-list');
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `<td>${item.date}</td><td>${item.value}</td>`;
+                        tbody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading data:', error));
+    </script>
+</body>
+</html>

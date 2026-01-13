@@ -57,29 +57,6 @@ def send_email(price, current_time):
     except Exception as e:
         print(f"Error sending email: {e}")
 
-    if not all([smtp_host, smtp_port, smtp_user, smtp_pass, email_from, email_to]):
-        print("Error: Missing SMTP environment variables.")
-        return
-
-    subject = f"今日 VIX 指数更新: {price}"
-    content = f"北京时间: {current_time}\n当前 CBOE VIX 数值为: {price}"
-    
-    message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = Header(f"VIX Bot <{email_from}>", 'utf-8')
-    message['To'] = Header(email_to, 'utf-8')
-    message['Subject'] = Header(subject, 'utf-8')
-    
-    try:
-        # 连接 SMTP 服务器
-        server = smtplib.SMTP(smtp_host, smtp_port)
-        server.starttls() # TLS 安全连接
-        server.login(smtp_user, smtp_pass)
-        server.sendmail(email_from, email_to, message.as_string())
-        server.quit()
-        print("Email sent successfully.")
-    except Exception as e:
-        print(f"Error sending email: {e}")
-
 # 3. 更新本地 JSON 数据
 def update_json(price, current_time):
     file_path = 'data.json'

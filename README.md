@@ -1,2 +1,2 @@
 # CBOE-VIX
-Get daily CBOE-VIX data via email
+A tool that obtains daily CBOE-VIX data via email

@@ -21,14 +21,41 @@ def get_vix_price():
 
 # 2. 发送邮件
 def send_email(price, current_time):
-    # --- 从环境变量读取配置 ---
     smtp_host = os.getenv("SMTP_HOST")
     smtp_port = int(os.getenv("SMTP_PORT") or 0)
     smtp_user = os.getenv("SMTP_USER")
     smtp_pass = os.getenv("SMTP_PASS")
     email_from = os.getenv("EMAIL_FROM")
     email_to = os.getenv("EMAIL_TO")
-    # ------------------------
+
+    if not all([smtp_host, smtp_port, smtp_user, smtp_pass, email_from, email_to]):
+        print("Error: Missing SMTP environment variables.")
+        return
+
+    subject = f"今日 VIX 指数更新: {price}"
+    content = f"北京时间: {current_time}\n当前 CBOE VIX 数值为: {price}"
+    
+    message = MIMEText(content, 'plain', 'utf-8')
+    message['From'] = Header(f"VIX Bot <{email_from}>", 'utf-8')
+    message['To'] = Header(email_to, 'utf-8')
+    message['Subject'] = Header(subject, 'utf-8')
+    
+    try:
+        # 核心逻辑：根据端口选择连接方式
+        if smtp_port == 465:
+            # 465 端口必须使用 SMTP_SSL
+            server = smtplib.SMTP_SSL(smtp_host, smtp_port)
+        else:
+            # 587 或 25 端口使用普通 SMTP + starttls
+            server = smtplib.SMTP(smtp_host, smtp_port)
+            server.starttls()
+            
+        server.login(smtp_user, smtp_pass)
+        server.sendmail(email_from, email_to, message.as_string())
+        server.quit()
+        print("Email sent successfully.")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
     if not all([smtp_host, smtp_port, smtp_user, smtp_pass, email_from, email_to]):
         print("Error: Missing SMTP environment variables.")

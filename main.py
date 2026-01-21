@@ -35,20 +35,14 @@ def send_email(price, current_time):
     # 构造更规范的邮件内容
     subject = f"Market Alert: VIX Index Update - {current_time}" # 改变主题，避免纯中文或过于像广告
     body = f"""
-    Hello,
-    
-    This is an automated market data update.
-    
     Item: CBOE Volatility Index (VIX)
     Current Value: {price}
     Timestamp: {current_time} (Beijing Time)
-    
     ---
     Sent from GitHub Actions Automated Bot.
     """
     
     message = MIMEText(body, 'plain', 'utf-8')
-    # 关键：确保 From 这里的格式非常标准
     message['From'] = email_from
     message['To'] = email_to
     message['Subject'] = Header(subject, 'utf-8')

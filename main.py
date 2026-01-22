@@ -33,7 +33,7 @@ def send_email(price, current_time):
         return
 
     # 构造更规范的邮件内容
-    subject = f"Market Alert: VIX Index Update - {current_time}" # 改变主题，避免纯中文或过于像广告
+    subject = f"VIX Index Update - {current_time}"
     body = f"""
     Item: CBOE Volatility Index (VIX)
     Current Value: {price}

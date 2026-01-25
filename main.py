@@ -43,7 +43,7 @@ def send_email(price, current_time):
     </div>
     """
     
-    message = MIMEText(body, 'plain', 'utf-8')
+    message = MIMEText(body, 'html', 'utf-8')
     message['From'] = email_from
     message['To'] = email_to
     message['Subject'] = Header(subject, 'utf-8')

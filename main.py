@@ -35,11 +35,12 @@ def send_email(price, current_time):
     # 构造更规范的邮件内容
     subject = f"VIX Index Update - {current_time}"
     body = f"""
-    Item: CBOE Volatility Index (VIX)
-    Current Value: {price}
-    Timestamp: {current_time} (Beijing Time)
-    ---
-    Sent from GitHub Actions Automated Bot.
+    <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
+        <p style="font-size: 16px;"><b>Item:</b><br>CBOE Volatility Index (VIX)</p>
+        <p style="font-size: 16px;"><b>Current Value:</b><br>{price}</p>
+        <hr>
+        <p style="font-size: 12px; color: #888;">Data updated at {current_time} (Beijing Time)</p>
+    </div>
     """
     
     message = MIMEText(body, 'plain', 'utf-8')

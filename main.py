@@ -33,7 +33,7 @@ def send_email(price, current_time):
         return
 
     # 构造更规范的邮件内容
-    subject = f"VIX Index Update - {current_time}"
+    subject = f"🆕VIX Index Update - {current_time.split(' ')[0]}"
     body = f"""
     <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
         <p style="font-size: 16px;"><b>Item:</b><br>CBOE Volatility Index (VIX)</p>

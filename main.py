@@ -4,10 +4,10 @@ import json
 import os
 from email.mime.text import MIMEText
 from email.header import Header
+from email.utils import formataddr
 from datetime import datetime
 import pytz
 
-# 1. 获取 VIX 数据
 def get_vix_price():
     try:
         vix = yf.Ticker("^VIX")
@@ -19,7 +19,14 @@ def get_vix_price():
         return None
     return None
 
-# 2. 发送邮件
+def get_status_color(price):
+    if price < 20:
+        return "#D4EDDA", "#155724"
+    elif 20 <= price < 30:
+        return "#FFF3CD", "#856404"
+    else:
+        return "#F8D7DA", "#721C24"
+
 def send_email(price, current_time):
     smtp_host = os.getenv("SMTP_HOST")
     smtp_port = int(os.getenv("SMTP_PORT") or 0)
@@ -32,24 +39,27 @@ def send_email(price, current_time):
         print("Error: Missing SMTP environment variables.")
         return
 
-    # 构造更规范的邮件内容
+    bg_color, text_color = get_status_color(price)
+
     subject = f"🆕VIX Index Update - {current_time.split(' ')[0]}"
+    
     body = f"""
-    <div style="font-family: sans-serif; line-height: 1.6; color: #333;">
-        <p style="font-size: 16px;"><b>Item:</b><br>CBOE Volatility Index (VIX)</p>
-        <p style="font-size: 16px;"><b>Current Value:</b><br>{price}</p>
-        <hr>
-        <p style="font-size: 12px; color: #888;">Data updated at {current_time} (Beijing Time)</p>
+    <div style="font-family: sans-serif; line-height: 1.6; color: #333; padding: 20px; background-color: {bg_color}; border-radius: 8px;">
+        <h2 style="color: {text_color}; margin-top: 0;">Market Volatility Report</h2>
+        <p style="font-size: 16px;"><b>Item:</b> CBOE Volatility Index (VIX)</p>
+        <p style="font-size: 24px; color: {text_color};"><b>Current Value: {price}</b></p>
+        <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.1);">
+        <p style="font-size: 12px; color: #666;">Data updated at {current_time} (Beijing Time)</p>
     </div>
     """
     
     message = MIMEText(body, 'html', 'utf-8')
-    message['From'] = email_from
+    
+    message['From'] = formataddr((str(Header('News Alert', 'utf-8')), email_from))
     message['To'] = email_to
     message['Subject'] = Header(subject, 'utf-8')
     
     try:
-        # 使用 465 端口
         if smtp_port == 465:
             server = smtplib.SMTP_SSL(smtp_host, smtp_port)
         else:
@@ -59,11 +69,10 @@ def send_email(price, current_time):
         server.login(smtp_user, smtp_pass)
         server.sendmail(email_from, [email_to], message.as_string())
         server.quit()
-        print("Email sent successfully.")
+        print(f"Email sent successfully. (Value: {price})")
     except Exception as e:
         print(f"Error sending email: {e}")
 
-# 3. 更新本地 JSON 数据
 def update_json(price, current_time):
     file_path = 'data.json'
     new_record = {"date": current_time, "value": price}

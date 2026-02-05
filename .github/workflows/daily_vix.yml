@@ -2,7 +2,7 @@ name: VIX Daily Fetch
 
 on:
   schedule:
-    - cron: '06 23 * * *' # 北京时间 07:06
+    - cron: '06 23 * * *'
   workflow_dispatch:
 
 permissions:
@@ -25,7 +25,6 @@ jobs:
         run: pip install yfinance pytz
 
       - name: Run script
-        # 将 Secrets 注入到对应的环境变量名中
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}

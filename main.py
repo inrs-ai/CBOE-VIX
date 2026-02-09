@@ -41,7 +41,7 @@ def send_email(price, current_time):
 
     bg_color, text_color = get_status_color(price)
 
-    subject = f"🦊 VIX Index Update - {current_time.split(' ')[0]}"
+    subject = f"🦊VIX Index Update - {current_time.split(' ')[0]}"
     
     body = f"""
     <div style="font-family: sans-serif; line-height: 1.6; color: #333; padding: 20px; background-color: {bg_color}; border-radius: 8px;">
@@ -55,7 +55,7 @@ def send_email(price, current_time):
     
     message = MIMEText(body, 'html', 'utf-8')
     
-    message['From'] = formataddr((str(Header('Message Alert', 'utf-8')), email_from))
+    message['From'] = formataddr((str(Header('News Alert', 'utf-8')), email_from))
     message['To'] = email_to
     message['Subject'] = Header(subject, 'utf-8')
     

@@ -1,1 +1,1 @@
-This is a tool that obtains daily CBOE-VIX data via email
+A tool that sends daily CBOE VIX updates via email.

@@ -117,7 +117,7 @@ def build_alerts(vix, fg):
         if vix is not None:
             parts.append(f"VIX 处于「{vix_zone(vix)[0]}」区间")
         if fg is not None:
-            parts.append(f"F&amp;G 处于「{fg_zone(fg)[0]}」区间")
+            parts.append(f"F&amp;G Index 处于「{fg_zone(fg)[0]}」区间")
         summary = "，".join(parts) if parts else "暂无数据"
         msgs.append(("📊", f"{summary}，市场情绪整体平稳。"))
 

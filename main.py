@@ -326,7 +326,7 @@ def send_email(html_body, current_time):
 
     msg = MIMEText(html_body, "html", "utf-8")
     msg["From"] = formataddr(
-        (str(Header("Alert", "utf-8")), email_from))
+        (str(Header("Market Flash", "utf-8")), email_from))
     msg["To"] = email_to
     msg["Subject"] = Header(subject, "utf-8")
 
